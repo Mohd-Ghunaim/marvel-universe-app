@@ -1,25 +1,46 @@
 // App.jsx
 import { useState } from "react";
 import { Client } from 'appwrite';
+import md5 from 'md5';
+
 
 export default function App() {
   const [searchTerm, setSearchTerm] = useState("");
   const [results, setResults] = useState([]);
 
-  const client = new Client();
-  client.setProject('67b620570008ec3b49d4');  
+  const API_BASE_URL = 'https://gateway.marvel.com:443';
 
   const handleSearch = async (e) => {
     e.preventDefault();
+    const ts = Date.now().toString();
+    const hash = md5(ts + API_PRIVATE_KEY + API_PUBLIC_KEY);}
+    
+  // Replace 'your-public-api-key-here' with the actual public API key from your .env.local file
+  const API_PUBLIC_KEY = import.meta.env.VITE_MARVEL_PUBLIC_API_KEY;
+  const API_PRIVATE_KEY = import.meta.env.VITE_MARVEL_PRIVATE_API_KEY;
 
-    // Example: Replace with Marvel API call
-    const dummyResults = [
-      { id: 1, name: "Iron Man", image: "https://via.placeholder.com/150" },
-      { id: 2, name: "Spider-Man", image: "https://via.placeholder.com/150" },
-      { id: 3, name: "Captain America", image: "https://via.placeholder.com/150" },
-    ];
+  const API_OPTIONS = {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
 
-    setResults(dummyResults);
+  const tempEndpoint = '/v1/public/characters';
+
+  // Example function to make a request
+  const fetchMarvelData = async (endpoint) => {
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}${endpoint}?apikey=${API_PUBLIC_KEY}`,
+        API_OPTIONS
+      );
+      const data = await response.json();
+      console.log(data);
+      return data;
+    } catch (error) {
+      console.error('Error fetching Marvel data:', error);
+    }
   };
 
   return (

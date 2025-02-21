@@ -1,45 +1,55 @@
-// App.jsx
 import { useState } from "react";
-import { Client } from 'appwrite';
-import md5 from 'md5';
-
+import md5 from "md5";
 
 export default function App() {
   const [searchTerm, setSearchTerm] = useState("");
   const [results, setResults] = useState([]);
 
-  const API_BASE_URL = 'https://gateway.marvel.com:443';
-
-  const handleSearch = async (e) => {
-    e.preventDefault();
-    const ts = Date.now().toString();
-    const hash = md5(ts + API_PRIVATE_KEY + API_PUBLIC_KEY);}
-    
-  // Replace 'your-public-api-key-here' with the actual public API key from your .env.local file
+  const API_BASE_URL = "https://gateway.marvel.com:443";
+  
+  // Use the actual public and private keys from your .env.local
   const API_PUBLIC_KEY = import.meta.env.VITE_MARVEL_PUBLIC_API_KEY;
   const API_PRIVATE_KEY = import.meta.env.VITE_MARVEL_PRIVATE_API_KEY;
 
+  const handleSearch = async (e) => {
+    e.preventDefault();
+
+    // Generate timestamp and hash
+    const ts = Date.now().toString();
+    const hash = md5(ts + API_PRIVATE_KEY + API_PUBLIC_KEY);
+  
+    // Construct the endpoint with query, ts, apiKey, and hash
+    const endpoint = `/v1/public/characters?name=${searchTerm}&ts=${ts}&apikey=${API_PUBLIC_KEY}&hash=${hash}`;
+    
+    // Fetch the data
+    const data = await fetchMarvelData(endpoint);
+  
+    // If data is available, update the results
+    if (data && data.data) {
+      setResults(data.data.results);
+    }
+  };
+  
   const API_OPTIONS = {
-    method: 'GET',
+    method: "GET",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
   };
 
-  const tempEndpoint = '/v1/public/characters';
-
-  // Example function to make a request
+  // Function to fetch Marvel data from the API
   const fetchMarvelData = async (endpoint) => {
     try {
+      // Make the GET request to Marvel API with ts, hash, and apikey
       const response = await fetch(
-        `${API_BASE_URL}${endpoint}?apikey=${API_PUBLIC_KEY}`,
+        `${API_BASE_URL}${endpoint}`,
         API_OPTIONS
       );
       const data = await response.json();
-      console.log(data);
+      console.log(data); // For debugging
       return data;
     } catch (error) {
-      console.error('Error fetching Marvel data:', error);
+      console.error("Error fetching Marvel data:", error);
     }
   };
 
@@ -73,7 +83,7 @@ export default function App() {
             className="bg-white rounded-2xl shadow p-4 text-center"
           >
             <img
-              src={character.image}
+              src={`${character.thumbnail.path}.${character.thumbnail.extension}`} // Use the correct image path
               alt={character.name}
               className="w-32 h-32 mx-auto rounded-full mb-4"
             />

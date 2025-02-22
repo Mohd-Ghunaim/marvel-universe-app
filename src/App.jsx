@@ -1,5 +1,6 @@
 import { useState } from "react";
 import md5 from "md5";
+import "./App.css";
 
 export default function App() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -54,40 +55,34 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-4">
+    <div className="app-container">
       {/* Header */}
-      <header className="mb-6 text-center">
-        <h1 className="text-4xl font-bold text-red-600 mb-4">Marvel Universe</h1>
-        <form onSubmit={handleSearch} className="flex justify-center gap-2">
+      <header className="header">
+        <h1 className="title">Marvel Universe</h1>
+        <form onSubmit={handleSearch} className="search-form">
           <input
             type="text"
             placeholder="Search for a character..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="px-4 py-2 rounded-lg border w-64"
+            className="search-input"
           />
-          <button
-            type="submit"
-            className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
-          >
+          <button type="submit" className="search-button">
             Search
           </button>
         </form>
       </header>
 
       {/* Results Grid */}
-      <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+      <section className="results-grid">
         {results.map((character) => (
-          <div
-            key={character.id}
-            className="bg-white rounded-2xl shadow p-4 text-center"
-          >
+          <div key={character.id} className="result-card">
             <img
-              src={`${character.thumbnail.path}.${character.thumbnail.extension}`} // Use the correct image path
+              src={`${character.thumbnail.path}.${character.thumbnail.extension}`}
               alt={character.name}
-              className="w-32 h-32 mx-auto rounded-full mb-4"
+              className="result-image"
             />
-            <h2 className="text-xl font-semibold">{character.name}</h2>
+            <h2 className="result-name">{character.name}</h2>
           </div>
         ))}
       </section>

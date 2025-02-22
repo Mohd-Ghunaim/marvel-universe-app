@@ -19,7 +19,7 @@ export default function App() {
     const hash = md5(ts + API_PRIVATE_KEY + API_PUBLIC_KEY);
   
     // Construct the endpoint with query, ts, apiKey, and hash
-    const endpoint = `/v1/public/characters?name=${searchTerm}&ts=${ts}&apikey=${API_PUBLIC_KEY}&hash=${hash}`;
+    const endpoint = `/v1/public/characters?nameStartsWith=${searchTerm}&ts=${ts}&apikey=${API_PUBLIC_KEY}&hash=${hash}`;
     
     // Fetch the data
     const data = await fetchMarvelData(endpoint);

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import md5 from "md5";
 import "./App.css";
+import CharacterCard from "./components/CharacterCard";
 
 export default function App() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -76,14 +77,7 @@ export default function App() {
       {/* Results Grid */}
       <section className="results-grid">
         {results.map((character) => (
-          <div key={character.id} className="result-card">
-            <img
-              src={`${character.thumbnail.path}.${character.thumbnail.extension}`}
-              alt={character.name}
-              className="result-image"
-            />
-            <h2 className="result-name">{character.name}</h2>
-          </div>
+          <CharacterCard key={character.id} character={character} />
         ))}
       </section>
     </div>

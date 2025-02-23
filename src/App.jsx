@@ -6,49 +6,38 @@ import CharacterCard from "./components/CharacterCard";
 export default function App() {
   const [searchTerm, setSearchTerm] = useState("");
   const [results, setResults] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [hasSearched, setHasSearched] = useState(false); // Track if search has been performed
 
   const API_BASE_URL = "https://gateway.marvel.com:443";
-  
-  // Use the actual public and private keys from your .env.local
   const API_PUBLIC_KEY = import.meta.env.VITE_MARVEL_PUBLIC_API_KEY;
   const API_PRIVATE_KEY = import.meta.env.VITE_MARVEL_PRIVATE_API_KEY;
 
   const handleSearch = async (e) => {
     e.preventDefault();
+    if (!searchTerm) return; // Prevent search if input is empty
 
-    // Generate timestamp and hash
+    setIsLoading(true);
+    setHasSearched(true); // Mark that search has been performed
+
     const ts = Date.now().toString();
     const hash = md5(ts + API_PRIVATE_KEY + API_PUBLIC_KEY);
-  
-    // Construct the endpoint with query, ts, apiKey, and hash
+
     const endpoint = `/v1/public/characters?nameStartsWith=${searchTerm}&ts=${ts}&apikey=${API_PUBLIC_KEY}&hash=${hash}`;
-    
-    // Fetch the data
     const data = await fetchMarvelData(endpoint);
-  
-    // If data is available, update the results
+
     if (data && data.data) {
       setResults(data.data.results);
     }
-  };
-  
-  const API_OPTIONS = {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
+
+    setIsLoading(false);
   };
 
-  // Function to fetch Marvel data from the API
   const fetchMarvelData = async (endpoint) => {
     try {
-      // Make the GET request to Marvel API with ts, hash, and apikey
-      const response = await fetch(
-        `${API_BASE_URL}${endpoint}`,
-        API_OPTIONS
-      );
+      const response = await fetch(`${API_BASE_URL}${endpoint}`);
       const data = await response.json();
-      console.log(data); // For debugging
+      console.log(data);
       return data;
     } catch (error) {
       console.error("Error fetching Marvel data:", error);
@@ -57,9 +46,8 @@ export default function App() {
 
   return (
     <div className="app-container">
-      {/* Header */}
       <header className="header">
-        <h1 className="title">Marvel Universe</h1>
+        <h1 className="title">Marvel DataBase</h1>
         <form onSubmit={handleSearch} className="search-form">
           <input
             type="text"
@@ -74,11 +62,16 @@ export default function App() {
         </form>
       </header>
 
-      {/* Results Grid */}
       <section className="results-grid">
-        {results.map((character) => (
-          <CharacterCard key={character.id} character={character} />
-        ))}
+        {isLoading ? (
+          <p className="loading">Loading...</p>
+        ) : hasSearched && results.length === 0 ? ( // Check if a search has been performed and no results are found
+          <p className="no-results">No results found.</p>
+        ) : (
+          results.map((character) => (
+            <CharacterCard key={character.id} character={character} />
+          ))
+        )}
       </section>
     </div>
   );

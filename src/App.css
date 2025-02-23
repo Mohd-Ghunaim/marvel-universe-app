@@ -1,41 +1,125 @@
 /* App.css */
 
+body {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Align at the top, so the content grows downward */
+  height: 100vh;
+  margin: 0;
+  background-color: #ffffff; 
+}
+
 .app-container {
-  @apply min-h-screen bg-gray-100 p-4;
+  min-height: 80vh; /* Adjust height for better fit */
+  background-color: #ffffff; 
+  padding: 1rem;
+  width: 100%;
+  max-width: 1200px; 
+  display: flex;
+  flex-direction: column; /* Stack content vertically */
+  justify-content: flex-start; /* Allow content to expand downward */
 }
 
 .header {
-  @apply mb-6 text-center;
+  margin-bottom: 1.5rem;
+  text-align: center;
 }
 
 .title {
-  @apply text-4xl font-bold text-red-600 mb-4;
+  font-size: 4rem; 
+  font-weight: 700; 
+  color: #dc2626; 
+  margin-bottom: 2rem;
 }
 
 .search-form {
-  @apply flex justify-center gap-2;
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
 .search-input {
-  @apply px-4 py-2 rounded-lg border w-64;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid #d1d5db;
+  width: 16rem; 
 }
 
 .search-button {
-  @apply px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700;
+  padding: 0.5rem 1rem;
+  background-color: #dc2626; 
+  color: white;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.search-button:hover {
+  background-color: #b91c1c;
 }
 
 .results-grid {
-  @apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .results-grid {
+    grid-template-columns: repeat(2, 1fr); 
+  }
+}
+
+@media (min-width: 768px) {
+  .results-grid {
+    grid-template-columns: repeat(3, 1fr); 
+  }
+}
+
+@media (min-width: 1024px) {
+  .results-grid {
+    grid-template-columns: repeat(4, 1fr); 
+  }
 }
 
 .result-card {
-  @apply bg-white rounded-2xl shadow p-4 text-center;
+  background-color: white;
+  border-radius: 1rem; 
+  box-shadow: 0 4px 10px rgba(220, 38, 38, 0.4); 
+  padding: 1rem;
+  text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.result-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 14px rgba(220, 38, 38, 0.6); 
 }
 
 .result-image {
-  @apply w-32 h-32 mx-auto rounded-full mb-4;
+  width: 8rem;
+  height: 8rem;
+  margin: 0 auto 1rem auto;
+  border-radius: 50%; 
+  object-fit: cover;
 }
 
 .result-name {
-  @apply text-xl font-semibold;
+  font-size: 1.25rem; 
+  font-weight: 600; 
+  color: #000; 
+  margin-bottom: 0.5rem;
+}
+
+.result-description {
+  font-size: 0.9rem;
+  color: #000; 
+}
+
+.no-results {
+  font-size: 1.25rem; 
+  font-weight: 600; 
+  color: #dc2626; 
+  margin-top: 2rem;
 }

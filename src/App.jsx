@@ -48,7 +48,7 @@ export default function App() {
   return (
     <div className="app-container">
       <header className="header">
-        <h1 className="title">Marvel DataBase</h1>
+        <h1 className="title">Marvel Universe</h1>
         <form onSubmit={handleSearch} className="search-form">
           <input
             type="text"

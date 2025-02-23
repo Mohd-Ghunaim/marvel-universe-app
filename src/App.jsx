@@ -2,6 +2,7 @@ import { useState } from "react";
 import md5 from "md5";
 import "./App.css";
 import CharacterCard from "./components/CharacterCard";
+import LoadingIcon from "./components/LoadingIcon";
 
 export default function App() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -64,8 +65,8 @@ export default function App() {
 
       <section className="results-grid">
         {isLoading ? (
-          <p className="loading">Loading...</p>
-        ) : hasSearched && results.length === 0 ? ( // Check if a search has been performed and no results are found
+          <LoadingIcon />
+        ) : hasSearched && results.length === 0 ? ( 
           <p className="no-results">No results found.</p>
         ) : (
           results.map((character) => (

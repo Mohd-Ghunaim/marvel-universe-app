@@ -9,6 +9,7 @@ export default function App() {
   const [results, setResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false); // Track if search has been performed
+  const [filteredResults, setFilteredResults] = useState([]);
 
   const API_BASE_URL = "https://gateway.marvel.com:443";
   const API_PUBLIC_KEY = import.meta.env.VITE_MARVEL_PUBLIC_API_KEY;
@@ -60,6 +61,18 @@ export default function App() {
           <button type="submit" className="search-button">
             Search
           </button>
+          <select
+            onChange={(e) => setFilteredResults(e.target.value)}
+            className="search-category"
+            defaultChecked="characters"
+          >
+            <option value="characters">Characters</option>
+            <option value="comics">Comics</option>
+            <option value="characters">Series</option>
+            <option value="stories">Stories</option>
+            <option value="events">Events</option>
+            <option value="creators">Creators</option>
+          </select>
         </form>
       </header>
 

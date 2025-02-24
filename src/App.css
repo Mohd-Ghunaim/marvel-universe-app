@@ -146,3 +146,33 @@ body {
       transform: rotate(360deg);
   }
   } 
+
+  .search-category {
+    padding: 0.5rem 1rem;
+    background-color: #dc2626; 
+    color: white;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: background-color 0.2s ease;
+    border: 1px solid #dc2626;
+  }
+  
+  .search-category:hover {
+    background-color: #b91c1c; 
+    border-color: #b91c1c;
+  }
+  
+  .search-category option {
+    background-color: white; 
+    color: #dc2626;
+    padding: 0.5rem;
+    font-weight: 600;
+  }
+  
+  .search-category option:hover {
+    background-color: #fca5a5; 
+    color: #991b1b;
+  }
+  

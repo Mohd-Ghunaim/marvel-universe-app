@@ -175,4 +175,31 @@ body {
     background-color: #fca5a5; 
     color: #991b1b;
   }
+
+  .pagination {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  
+  .pagination button {
+    padding: 8px 16px;
+    cursor: pointer;
+    background-color: #dc2626;
+    color: white;
+    border: none;
+    border-radius: 4px;
+  }
+
+  .pagination button:hover {
+    background-color: #991b1b; 
+    transform: scale(1.05); 
+  }
+  
+  .pagination button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
   

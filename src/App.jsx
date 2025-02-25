@@ -8,36 +8,42 @@ export default function App() {
   const [searchTerm, setSearchTerm] = useState("");
   const [results, setResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [hasSearched, setHasSearched] = useState(false); // Track if search has been performed
-  const [filteredResults, setFilteredResults] = useState('characters');
+  const [hasSearched, setHasSearched] = useState(false); 
+  const [filteredResults, setFilteredResults] = useState("characters");
+  const [currentPage, setCurrentPage] = useState(1); // Page state
+  const [totalPages, setTotalPages] = useState(1); // Total pages state
 
   const API_BASE_URL = "https://gateway.marvel.com:443";
   const API_PUBLIC_KEY = import.meta.env.VITE_MARVEL_PUBLIC_API_KEY;
   const API_PRIVATE_KEY = import.meta.env.VITE_MARVEL_PRIVATE_API_KEY;
 
+  const ITEMS_PER_PAGE = 20; 
+
   const handleSearch = async (e) => {
     e.preventDefault();
     if (!searchTerm) return;
-  
+
     setIsLoading(true);
     setHasSearched(true);
-  
+
     const ts = Date.now().toString();
     const hash = md5(ts + API_PRIVATE_KEY + API_PUBLIC_KEY);
-  
-    // Correct parameter based on selected category
+
     const searchParam =
       filteredResults === "characters" || filteredResults === "creators"
         ? "nameStartsWith"
         : "titleStartsWith";
-  
-    const endpoint = `/v1/public/${filteredResults}?${searchParam}=${searchTerm}&ts=${ts}&apikey=${API_PUBLIC_KEY}&hash=${hash}`;
+
+    const offset = (currentPage - 1) * ITEMS_PER_PAGE; 
+
+    const endpoint = `/v1/public/${filteredResults}?${searchParam}=${searchTerm}&limit=${ITEMS_PER_PAGE}&offset=${offset}&ts=${ts}&apikey=${API_PUBLIC_KEY}&hash=${hash}`;
     const data = await fetchMarvelData(endpoint);
-  
+
     if (data && data.data) {
       setResults(data.data.results);
+      setTotalPages(Math.ceil(data.data.total / ITEMS_PER_PAGE)); // Update total pages based on the total count
     }
-  
+
     setIsLoading(false);
   };
 
@@ -45,10 +51,16 @@ export default function App() {
     try {
       const response = await fetch(`${API_BASE_URL}${endpoint}`);
       const data = await response.json();
-      console.log(data);
       return data;
     } catch (error) {
       console.error("Error fetching Marvel data:", error);
+    }
+  };
+
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+      handleSearch(new Event("submit")); // Trigger a new search when the page changes
     }
   };
 
@@ -70,7 +82,7 @@ export default function App() {
           <select
             onChange={(e) => setFilteredResults(e.target.value)}
             className="search-category"
-            defaultChecked="characters"
+            defaultValue="characters"
           >
             <option value="characters">Character</option>
             <option value="comics">Comic</option>
@@ -85,7 +97,7 @@ export default function App() {
       <section className="results-grid">
         {isLoading ? (
           <LoadingIcon />
-        ) : hasSearched && results.length === 0 ? ( 
+        ) : hasSearched && results.length === 0 ? (
           <p className="no-results">No results found.</p>
         ) : (
           results.map((character) => (
@@ -93,6 +105,24 @@ export default function App() {
           ))
         )}
       </section>
+
+      {hasSearched && results.length > 0 && (
+        <div className="pagination">
+          <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            Previous
+          </button>
+          <span>Page {currentPage} of {totalPages}</span>
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+          >
+            Next
+          </button>
+        </div>
+      )}
     </div>
   );
 }

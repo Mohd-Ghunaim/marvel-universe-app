@@ -9,7 +9,7 @@ export default function App() {
   const [results, setResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false); // Track if search has been performed
-  const [filteredResults, setFilteredResults] = useState([]);
+  const [filteredResults, setFilteredResults] = useState('characters');
 
   const API_BASE_URL = "https://gateway.marvel.com:443";
   const API_PUBLIC_KEY = import.meta.env.VITE_MARVEL_PUBLIC_API_KEY;
@@ -17,21 +17,27 @@ export default function App() {
 
   const handleSearch = async (e) => {
     e.preventDefault();
-    if (!searchTerm) return; // Prevent search if input is empty
-
+    if (!searchTerm) return;
+  
     setIsLoading(true);
-    setHasSearched(true); // Mark that search has been performed
-
+    setHasSearched(true);
+  
     const ts = Date.now().toString();
     const hash = md5(ts + API_PRIVATE_KEY + API_PUBLIC_KEY);
-
-    const endpoint = `/v1/public/characters?nameStartsWith=${searchTerm}&ts=${ts}&apikey=${API_PUBLIC_KEY}&hash=${hash}`;
+  
+    // Correct parameter based on selected category
+    const searchParam =
+      filteredResults === "characters" || filteredResults === "creators"
+        ? "nameStartsWith"
+        : "titleStartsWith";
+  
+    const endpoint = `/v1/public/${filteredResults}?${searchParam}=${searchTerm}&ts=${ts}&apikey=${API_PUBLIC_KEY}&hash=${hash}`;
     const data = await fetchMarvelData(endpoint);
-
+  
     if (data && data.data) {
       setResults(data.data.results);
     }
-
+  
     setIsLoading(false);
   };
 
@@ -53,7 +59,7 @@ export default function App() {
         <form onSubmit={handleSearch} className="search-form">
           <input
             type="text"
-            placeholder="Search for a character..."
+            placeholder={`Search for a ${filteredResults}...`}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="search-input"
@@ -66,12 +72,12 @@ export default function App() {
             className="search-category"
             defaultChecked="characters"
           >
-            <option value="characters">Characters</option>
-            <option value="comics">Comics</option>
-            <option value="characters">Series</option>
-            <option value="stories">Stories</option>
-            <option value="events">Events</option>
-            <option value="creators">Creators</option>
+            <option value="characters">Character</option>
+            <option value="comics">Comic</option>
+            <option value="series">Series</option>
+            <option value="stories">Story</option>
+            <option value="events">Event</option>
+            <option value="creators">Creator</option>
           </select>
         </form>
       </header>

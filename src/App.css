@@ -202,4 +202,26 @@ body {
     cursor: not-allowed;
   }
   
+  .favorite-button {
+    padding: 0.5rem;
+    border-radius: 50%;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+  }
+
+  .favorite-button :focus {
+    outline: none;
+  }
+  
+  .favorite-button img {
+    width: 24px;
+    height: 24px;
+    transition: filter 0.2s ease;
+  }
+  
+  .favorite-button:hover {
+    transform: scale(1.2);
+  }
+
   

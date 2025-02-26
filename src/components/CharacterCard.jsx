@@ -1,4 +1,5 @@
 import React from 'react';
+import FavoriteButton from './favoriteButton';
 
 const CharacterCard = ({ character }) => {
   const { name, title, thumbnail, description, firstName, middleName, lastName } = character;
@@ -8,7 +9,6 @@ const CharacterCard = ({ character }) => {
 
   return (
     <div className="result-card">
-      {/* Display image if available */}
       {thumbnail && (
         <img
           src={`${thumbnail.path}.${thumbnail.extension}`}
@@ -17,10 +17,10 @@ const CharacterCard = ({ character }) => {
         />
       )}
 
-      {/* Display character, comic, series, event, story, or creator name */}
       <h2 className="result-name">{name || title || creatorName}</h2>
 
-      {/* Display description or fallback */}
+      <FavoriteButton item={character} />
+
       <p className="result-description">
         {description || "No description available."}
       </p>
